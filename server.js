@@ -1,15 +1,17 @@
 const express = require('express'); // Express.js
 const axios = require('axios'); //HTTP request with promises
 var app = express();
+var port = 4000;
 
 const tmdbApiKey = require('./tmdbapikey')['tmdbapikey'];
 
 app.get('/', (req,res) => {
+  console.log(req);
   getTrailerKey(req.query.url).then((v) => {
     console.log(v);
 
     if (v == null) {
-      res.send("no results")
+      res.status(404).send({'error': 'no results'});
     }
     else {
       res.status(200).send({'trailer': `https://www.youtube.com/watch?v=${v}`});
@@ -20,10 +22,12 @@ app.get('/', (req,res) => {
         
 });
 
-app.listen(4000);
+app.listen(port, () => {
+  console.log("API on port:" + port);
+});
 
-//Export the api-server-app
-module.exports.app = app;
+//Export the api-server-app for testing
+module.exports = app;
 
 
  async function getTrailerKey (url) {
@@ -42,7 +46,7 @@ module.exports.app = app;
   return key;
   })
   .catch((e) => {
-    console.log("Error: ",e);
+    console.log("TrailerKeyError: ",e);
   })
 
 return key;
