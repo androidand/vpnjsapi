@@ -10,6 +10,14 @@ var api = supertest.agent('http://localhost:4000');
 
 describe('API Server tests', () => {
 
+it('should return a 400 response', (done) => { 
+  api
+  .get('/')
+  .query({})
+  .set('Accept','application/json')
+  .expect(400,done);
+});
+
 it('should return a 404 response', (done) => { 
   api
   .get('/')

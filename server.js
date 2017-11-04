@@ -6,20 +6,21 @@ var port = 4000;
 const tmdbApiKey = require('./tmdbapikey')['tmdbapikey'];
 
 app.get('/', (req,res) => {
-  console.log(req);
+ if (req.query.url == null) {
+  res.status(400).send({'error': 'Url parameter required'})
+ }
+ else {
   getTrailerKey(req.query.url).then((v) => {
     console.log(v);
 
     if (v == null) {
-      res.status(404).send({'error': 'no results'});
+      res.status(404).send({'error': 'No results'});
     }
     else {
       res.status(200).send({'trailer': `https://www.youtube.com/watch?v=${v}`});
-    }
-      
-  
+    } 
   });
-        
+ }      
 });
 
 app.listen(port, () => {
